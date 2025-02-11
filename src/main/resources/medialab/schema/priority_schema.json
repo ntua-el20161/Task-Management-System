@@ -1,0 +1,15 @@
+{
+  "title": "Priority",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Unique identifier for the priority"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the priority"
+    }
+  }
+}
+  

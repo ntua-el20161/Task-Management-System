@@ -1,0 +1,15 @@
+{
+  "title": "Category",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Unique identifier for the category"
+    },
+    "name": {
+      "type": "string",
+      "description": "Name of the category"
+    }
+  }  
+}
+  

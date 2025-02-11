@@ -1,0 +1,30 @@
+{
+  "title": "Notification",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "Unique identifier for the notification"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["DAY_BEFORE", "WEEK_BEFORE", "MONTH_BEFORE", "CUSTOM"],
+      "description": "Type of notification"
+    },
+    "triggerDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Date when the notification should be triggered"
+    },
+    "taskId": {
+      "type": "integer",
+      "description": "ID of the associated task"
+    },
+    "DueDate": {
+      "type": "string",
+      "format": "date",
+      "description": "Due date of the associated task"
+    }
+  }
+}
+  

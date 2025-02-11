@@ -1,0 +1,35 @@
+{
+  "title": "TaskManager",
+  "type": "object",
+  "properties": {
+    "categories": {
+      "type": "array",
+      "items": {
+        "$ref": "#/schema/category_schema.json"
+      },
+      "description": "List of categories managed by the TaskManager"
+    },
+    "priorities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/schema/priority_schema.json"
+      },
+      "description": "List of priorities managed by the TaskManager"
+    },
+    "tasks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/schema/task_schema.json"
+      },
+      "description": "List of all tasks in the system"
+    },
+    "notifications": {
+      "type": "array",
+      "items": {
+        "$ref": "#/schema/notification_schema.json"
+      },
+      "description": "List of all notifications in the system"
+    }
+  }
+}
+  
