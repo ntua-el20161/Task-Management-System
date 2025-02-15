@@ -1,11 +1,14 @@
+AddTaskForm.class
 taskmanagementsystem/NotificationType.class
-taskmanagementsystem/Task$Status.class
+AddPriorityForm.class
 taskmanagementsystem/Priority.class
+AddCategoryForm.class
 taskmanagementsystem/Notification.class
 Main.class
 taskmanagementsystem/TaskManager.class
+taskmanagementsystem/TaskStatus.class
 taskmanagementsystem/Task.class
-SearchBar.class
+SearchForm.class
 taskmanagementsystem/Notification$1.class
 taskmanagementsystem/Category.class
 TopBar.class

@@ -1,14 +1,23 @@
 package taskmanagementsystem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Category {
     // Attributes
     private Integer id;
     private String name;
+    private List<Task> tasks;
     
+    static Integer nextId = 11;
+    // Default constructor: Required for JSON deserialization
+    public Category() {}
+
     // Default access: Only the TaskManager can create categories
-    Category(Integer id, String name) {
-        this.id = id;
+    Category(String name) {
+        this.id = nextId++;
         this.name = name;
+        this.tasks = new ArrayList<>();
     }
 
     /**
@@ -33,5 +42,26 @@ public class Category {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Get the tasks of the category
+     * @return the tasks of the category
+     */
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    void addTask(Task task) {
+        tasks.add(task);
+    }
+
+    void deleteCategory() {
+        tasks.clear();
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

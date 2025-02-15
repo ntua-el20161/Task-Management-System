@@ -1,32 +1,37 @@
 package taskmanagementsystem;
 
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 // Assumption 1: The user cannot change the category of a Task
 // Assumption 2: The user can change the priority of a Task
 
 public class Task {
-    private enum Status {
-        OPEN, IN_PROGRESS, POSTPONED, COMPLETED, DELAYED
-    }   
     // Attributes
     private Integer id;
     private String title;
     private String description;
     private Integer categoryId;
     private Integer priorityId;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
-    private Status status;
+    private TaskStatus status;
     
+    static Integer nextId = 11;
+    
+    // Default constructor: Required for JSON deserialization
+    public Task() {}
+
     // Default access constructor: Tasks can only be created by the TaskManager
-    Task(Integer id,String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate) {
-        this.id = id;
+    public Task(String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate) {
+        this.id = nextId++;
         this.title = title;
         this.description = description;
         this.categoryId = categoryId;
         this.priorityId = priorityId;
         this.dueDate = dueDate;
-        this.status = Status.OPEN;
+        this.status = TaskStatus.OPEN;
     }
 
     /**
@@ -77,6 +82,7 @@ public class Task {
         return categoryId;
     }
 
+    
     /**
      * Get the priority id of the task
      * @return the priority id of the task
@@ -85,11 +91,9 @@ public class Task {
         return priorityId;
     }
 
-    /**
-     * Set the priority id of the task
-     * @param priorityId the new priority id of the task
-     */
-    public void setPriorityId(Integer priorityId) {
+    // auxiliary method to change the priority of a task
+    // the task need to be added in the new priority list
+    void setPriorityId(Integer priorityId) {
         this.priorityId = priorityId;
     }
 
@@ -113,7 +117,7 @@ public class Task {
      * Get the status of the task
      * @return the status of the task
      */
-    public Status getStatus() {
+    public TaskStatus getStatus() {
         return status;
     }
 

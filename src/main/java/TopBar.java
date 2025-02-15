@@ -1,3 +1,7 @@
+import taskmanagementsystem.*;
+
+import java.time.LocalDate;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -8,37 +12,38 @@ import javafx.scene.layout.VBox;
 
 // This is the top bar of the application that shows the total tasks, completed tasks, delayed tasks, and tasks for the next 7 days 
 public class TopBar extends HBox {
-
+    private TaskManager taskManager;
     private Label totalTasksLabel;
     private Label completedTasksLabel;
     private Label delayedTasksLabel;
     private Label sevenDaysTasksLabel;
 
-    public TopBar() {
+    public TopBar(TaskManager taskManager) {
+        this.taskManager = taskManager;
         // Initialize labels for total tasks
         Label totalTasksText = new Label("Total Tasks");
-        totalTasksLabel = new Label("0");
+        totalTasksLabel = new Label(Integer.toString(taskManager.getTasks().size()));
         totalTasksLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         VBox totalTasksBox = new VBox(totalTasksText, totalTasksLabel);
         totalTasksBox.setAlignment(Pos.CENTER);
 
         // Initialize labels for completed tasks
         Label completedTasksText = new Label("Completed Tasks");
-        completedTasksLabel = new Label("0");
+        completedTasksLabel = new Label(Integer.toString(taskManager.getTasksByStatus(TaskStatus.COMPLETED).size()));
         completedTasksLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         VBox completedTasksBox = new VBox(completedTasksText, completedTasksLabel);
         completedTasksBox.setAlignment(Pos.CENTER);
 
         // Initialize labels for delayed tasks
         Label delayedTasksText = new Label("Delayed Tasks");
-        delayedTasksLabel = new Label("0");
+        delayedTasksLabel = new Label(Integer.toString(taskManager.getTasksByStatus(TaskStatus.DELAYED).size()));
         delayedTasksLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         VBox delayedTasksBox = new VBox(delayedTasksText, delayedTasksLabel);
         delayedTasksBox.setAlignment(Pos.CENTER);
 
-        // Initialize labels for tasks for the next 7 days
-        Label sevenDaysTasksText = new Label("Tasks for the next 7 days");
-        sevenDaysTasksLabel = new Label("0");
+        // Initialize labels for tasks due in the next 7 days
+        Label sevenDaysTasksText = new Label("Tasks due in the next 7 days");
+        sevenDaysTasksLabel = new Label(Integer.toString((int) taskManager.getTasks().stream().filter(task -> task.getDueDate().isBefore(LocalDate.now().plusDays(7)) && task.getDueDate().isAfter(LocalDate.now())).count()));
         sevenDaysTasksLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         VBox sevenDaysTasksBox = new VBox(sevenDaysTasksText, sevenDaysTasksLabel);
         sevenDaysTasksBox.setAlignment(Pos.CENTER);
@@ -62,20 +67,10 @@ public class TopBar extends HBox {
         this.setStyle("-fx-background-color: #2196F3; -fx-padding: 10;");
     }
 
-    // Methods to update the labels
-    public void setTotalTasks(int totalTasks) {
-        totalTasksLabel.setText(Integer.toString(totalTasks));
-    }
-
-    public void setCompletedTasks(int completedTasks) {
-        completedTasksLabel.setText(Integer.toString(completedTasks));
-    }
-
-    public void setDelayedTasks(int delayedTasks) {
-        delayedTasksLabel.setText(Integer.toString(delayedTasks));
-    }
-
-    public void setSevenDaysTasks(int sevenDaysTasks) {
-        sevenDaysTasksLabel.setText(Integer.toString(sevenDaysTasks));
+    public void updateLabels() {
+        totalTasksLabel.setText(Integer.toString(taskManager.getTasks().size()));
+        completedTasksLabel.setText(Integer.toString(taskManager.getTasksByStatus(TaskStatus.COMPLETED).size()));
+        delayedTasksLabel.setText(Integer.toString(taskManager.getTasksByStatus(TaskStatus.DELAYED).size()));
+        sevenDaysTasksLabel.setText(Integer.toString((int) taskManager.getTasks().stream().filter(task -> task.getDueDate().isBefore(LocalDate.now().plusDays(7)) && task.getDueDate().isAfter(LocalDate.now())).count()));
     }
 }

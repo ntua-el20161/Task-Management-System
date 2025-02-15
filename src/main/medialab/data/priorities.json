@@ -1,0 +1,109 @@
+[ {
+  "id" : 1,
+  "name" : "High",
+  "tasks" : [ {
+    "id" : 1,
+    "title" : "Complete Project Report",
+    "description" : "Finalize and submit the project report by the due date.",
+    "categoryId" : 2,
+    "priorityId" : 1,
+    "dueDate" : "2025-02-15",
+    "status" : "IN_PROGRESS"
+  }, {
+    "id" : 1,
+    "title" : "Update Website",
+    "description" : "Fix layout issues and improve performance.",
+    "categoryId" : 4,
+    "priorityId" : 1,
+    "dueDate" : "2025-02-18",
+    "status" : "POSTPONED"
+  }, {
+    "id" : 1,
+    "title" : "Client Presentation",
+    "description" : "Prepare slides and rehearse for the client presentation.",
+    "categoryId" : 6,
+    "priorityId" : 1,
+    "dueDate" : "2025-02-20",
+    "status" : "IN_PROGRESS"
+  }, {
+    "id" : 1,
+    "title" : "Fix Critical Bug",
+    "description" : "Investigate and resolve the reported issue in production.",
+    "categoryId" : 1,
+    "priorityId" : 1,
+    "dueDate" : "2025-02-14",
+    "status" : "COMPLETED"
+  }, {
+    "id" : 11,
+    "title" : "Bench 115kg",
+    "description" : "go gym bench 115kg",
+    "categoryId" : 9,
+    "priorityId" : 1,
+    "dueDate" : "2025-03-20",
+    "status" : "OPEN"
+  }, {
+    "id" : 11,
+    "title" : "Dilly Dally",
+    "description" : "just dilly dally",
+    "categoryId" : 2,
+    "priorityId" : 1,
+    "dueDate" : "2025-02-17",
+    "status" : "OPEN"
+  } ]
+}, {
+  "id" : 2,
+  "name" : "Medium",
+  "tasks" : [ {
+    "id" : 3,
+    "title" : "Team Meeting",
+    "description" : "Discuss project updates and next steps.",
+    "categoryId" : 3,
+    "priorityId" : 2,
+    "dueDate" : "2025-02-10",
+    "status" : "OPEN"
+  }, {
+    "id" : 5,
+    "title" : "Submit Tax Documents",
+    "description" : "Gather all required documents and file tax returns.",
+    "categoryId" : 5,
+    "priorityId" : 2,
+    "dueDate" : "2025-03-01",
+    "status" : "OPEN"
+  }, {
+    "id" : 7,
+    "title" : "Organize Workspace",
+    "description" : "Clean and arrange the workspace for better efficiency.",
+    "categoryId" : 7,
+    "priorityId" : 2,
+    "dueDate" : "2025-02-17",
+    "status" : "DELAYED"
+  } ]
+}, {
+  "id" : 3,
+  "name" : "Low",
+  "tasks" : [ {
+    "id" : 1,
+    "title" : "Code Review",
+    "description" : "Review the latest code changes and provide feedback.",
+    "categoryId" : 1,
+    "priorityId" : 3,
+    "dueDate" : "2025-02-12",
+    "status" : "OPEN"
+  }, {
+    "id" : 2,
+    "title" : "Write Blog Post",
+    "description" : "Draft and publish a blog post on the latest technology trends.",
+    "categoryId" : 4,
+    "priorityId" : 3,
+    "dueDate" : "2025-02-25",
+    "status" : "POSTPONED"
+  }, {
+    "id" : 8,
+    "title" : "Plan Weekend Getaway",
+    "description" : "Book accommodations and finalize itinerary.",
+    "categoryId" : 8,
+    "priorityId" : 3,
+    "dueDate" : "2025-03-05",
+    "status" : "OPEN"
+  } ]
+} ]

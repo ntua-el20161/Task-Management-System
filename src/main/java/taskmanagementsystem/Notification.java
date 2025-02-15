@@ -2,38 +2,53 @@ package taskmanagementsystem;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({ "id", "triggerDate", "taskId", "dueDate", "type"})
 public class Notification {
     private int id;
     private NotificationType type; // Type of notification
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate triggerDate; // Date when the notification should be triggered
+
     private Integer taskId; // Associated task
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate dueDate; // Due date of the associated task
     
-    Notification(int id, NotificationType type, LocalDate triggerDate, Integer taskId, LocalDate dueDate) throws IllegalArgumentException {
+    // Default constructor: Required for JSON deserialization
+    public Notification() {}
+
+    
+    public Notification(int id, NotificationType type, LocalDate triggerDate, Integer taskId, LocalDate dueDate) throws IllegalArgumentException {
         this.id = id;
         this.type = type;
         this.triggerDate = triggerDate;
         this.taskId = taskId;
         this.dueDate = dueDate;
 
+        
         switch (type) {
             case DAY_BEFORE:
-                if(triggerDate.isAfter(dueDate.minusDays(1)) || triggerDate.isBefore(dueDate.minusDays(1))) {
+                if(triggerDate.isAfter(this.dueDate.minusDays(1)) || triggerDate.isBefore(this.dueDate.minusDays(1))) {
                     throw new IllegalArgumentException("The trigger date must be exactly one day before the due date.");
                 }
                 break;
             case WEEK_BEFORE:
-                if(triggerDate.isAfter(dueDate.minusWeeks(1)) || triggerDate.isBefore(dueDate.minusWeeks(1))) {
+                if(triggerDate.isAfter(this.dueDate.minusWeeks(1)) || triggerDate.isBefore(this.dueDate.minusWeeks(1))) {
                     throw new IllegalArgumentException("The trigger date must be exactly one week before the due date.");
                 }
                 break;
             case MONTH_BEFORE:
-                if(triggerDate.isAfter(dueDate.minusMonths(1)) || triggerDate.isBefore(dueDate.minusMonths(1))) {
+                if(triggerDate.isAfter(this.dueDate.minusMonths(1)) || triggerDate.isBefore(this.dueDate.minusMonths(1))) {
                     throw new IllegalArgumentException("The trigger date must be exactly one month before the due date.");
                 }
                 break;
             case CUSTOM:
-                if(triggerDate.isAfter(dueDate) || triggerDate.isEqual(dueDate)) {
+                if(triggerDate.isAfter(this.dueDate) || triggerDate.isEqual(this.dueDate)) {
                     throw new IllegalArgumentException("The trigger date must be before the due date.");
                 }
                 break;
@@ -61,23 +76,15 @@ public class Notification {
      * @param type the new type of the notification
      */
     public void setType(NotificationType type) throws IllegalArgumentException {
-        this.type = type;
-
         switch (type) {
             case DAY_BEFORE:
-                if(triggerDate.isAfter(dueDate.minusDays(1)) || triggerDate.isBefore(dueDate.minusDays(1))) {
-                    throw new IllegalArgumentException("The trigger date must be exactly one day before the due date.");
-                }
+                triggerDate = dueDate.minusDays(1);
                 break;
             case WEEK_BEFORE:
-                if(triggerDate.isAfter(dueDate.minusWeeks(1)) || triggerDate.isBefore(dueDate.minusWeeks(1))) {
-                    throw new IllegalArgumentException("The trigger date must be exactly one week before the due date.");
-                }
+                triggerDate = dueDate.minusWeeks(1);
                 break;
             case MONTH_BEFORE:
-                if(triggerDate.isAfter(dueDate.minusMonths(1)) || triggerDate.isBefore(dueDate.minusMonths(1))) {
-                    throw new IllegalArgumentException("The trigger date must be exactly one month before the due date.");
-                }
+                triggerDate = dueDate.minusMonths(1);
                 break;
             case CUSTOM:
                 if(triggerDate.isAfter(dueDate) || triggerDate.isEqual(dueDate)) {
@@ -85,6 +92,7 @@ public class Notification {
                 }
                 break;
         }
+        this.type = type;
     }
     
     /**
@@ -126,5 +134,11 @@ public class Notification {
                "\nType: " + type +
                "\nTrigger Date: " + triggerDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
                "\nAssociated Task: " + taskId;
+    }
+
+    // Setter used ONLY during deserialization (without validation)
+    @JsonSetter("triggerDate")
+    public void setTriggerDateForJsonDeserialization(LocalDate triggerDate) {
+        this.triggerDate = triggerDate;
     }
 }

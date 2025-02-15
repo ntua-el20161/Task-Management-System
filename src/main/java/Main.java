@@ -4,23 +4,31 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
+    private TaskManager taskManager; 
 
     @Override
     public void start(Stage primaryStage) {
-        TaskManager taskManager = new TaskManager();
+        taskManager = new TaskManager();
+
+        taskManager.loadData();
 
         // Title of tha main window of the app
         primaryStage.setTitle("Medialab Assistant");
@@ -28,14 +36,14 @@ public class Main extends Application {
         primaryStage.setWidth(950);  // Set width
         primaryStage.setHeight(600); // Set height
 
-        // Create the top bar
-        TopBar topBar = new TopBar();
-        topBar.setTotalTasks(10);       // Example: Set total tasks
-        topBar.setCompletedTasks(5);    // Example: Set completed tasks
-        topBar.setDelayedTasks(2);      // Example: Set delayed tasks
-        topBar.setSevenDaysTasks(3);    // Example: Set tasks for the next 7 days
+        //------------------------------------------------------------------
+        // Top bar section
 
-         // Create the main content area
+        TopBar topBar = new TopBar(taskManager);
+
+        // ------------------------------------------------------------------
+
+        // Create the main content area
         VBox mainContent = new VBox(10);
         mainContent.setPadding(new Insets(20));
 
@@ -43,16 +51,133 @@ public class Main extends Application {
         ListView<Task> taskListView = new ListView<>();
         taskListView.setPrefHeight(400);
 
+        ListView<Category> categoryListView = new ListView<>();
+        categoryListView.setPrefHeight(400);
+
+        ListView<Priority> priorityListView = new ListView<>();
+        priorityListView.setPrefHeight(400);
+
+        ListView<Notification> notificationListView = new ListView<>();
+        notificationListView.setPrefHeight(400);
+
+        // Create a container to hold the list view
+        VBox container = new VBox(10);
+        container.setPadding(new Insets(20));
+
+        //------------------------------------------------------------------
+        // AddTask button
+
         Button addTaskButton = new Button("Add Task");
 
-        // Create a filtered list for search results
-        List<Task> filteredTasks = new ArrayList<>();
+        // Add functionality to the "Add Task" button
+        addTaskButton.setOnAction(event -> {
+
+            AddTaskForm addTaskForm = new AddTaskForm(taskManager);
+            addTaskForm.showForm();
+
+            // Update the list view to reflect the new task
+            taskListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
+
+            //Update the top bar
+            topBar.updateLabels();
+        });
+        
+        // ------------------------------------------------------------------
+        // AddCategory button
+
+        Button addCategoryButton = new Button("Add Category");
+
+        // Add functionality to the "Add Category" button
+        addCategoryButton.setOnAction(event -> {
+
+            AddCategoryForm addCategoryForm = new AddCategoryForm(taskManager);
+            addCategoryForm.showForm();
+        });
+
+        // ------------------------------------------------------------------
+        // AddPriority button
+
+        Button addPriorityButton = new Button("Add Priority");
+
+        // Add functionality to the "Add Priority" button
+        addPriorityButton.setOnAction(event -> {
+
+            AddPriorityForm addPriorityForm = new AddPriorityForm(taskManager);
+            addPriorityForm.showForm();
+        });
+
+        // ------------------------------------------------------------------
+        // Search bar section
 
         // Create the search bar
-        SearchBar searchBar = new SearchBar(taskManager);
+        Button searchButton = new Button("Search Tasks");
 
-        // Add the search bar and list view to the main content area
-        mainContent.getChildren().addAll(searchBar, taskListView, addTaskButton);
+        // TODO: add contains text search
+        // Add functionality to the search button
+        searchButton.setOnAction(event -> {
+            SearchForm searchForm = new SearchForm(taskManager, taskListView);
+            searchForm.showForm();
+        });
+
+        //------------------------------------------------------------------
+        // Show all tasks button
+
+        Button showTasksButton = new Button("Show Tasks");
+
+        // Add functionality to the "Show Tasks" button
+        showTasksButton.setOnAction(event -> {
+            taskListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
+            showView(taskListView, container);
+        });
+
+        //------------------------------------------------------------------
+        // Show all categories button
+
+        Button showCategoriesButton = new Button("Show Categories");
+
+        // Add functionality to the "Show Categories" button
+        showCategoriesButton.setOnAction(event -> {
+            List<Category> categories = taskManager.getCategories();
+            
+            categoryListView.setItems(FXCollections.observableArrayList(categories));
+            showView(categoryListView, container);
+        });
+
+        //------------------------------------------------------------------
+        // Show all priorities button
+
+        Button showPrioritiesButton = new Button("Show Priorities");
+
+        // Add functionality to the "Show Priorities" button
+        showPrioritiesButton.setOnAction(event -> {
+            List<Priority> priorities = taskManager.getPriorities();
+            
+            priorityListView.setItems(FXCollections.observableArrayList(priorities));
+            showView(priorityListView, container);
+        });
+
+        //------------------------------------------------------------------
+        // Show all notifications button
+
+        Button showNotificationsButton = new Button("Show Notifications");
+
+        // Add functionality to the "Show Notifications" button
+        showNotificationsButton.setOnAction(event -> {
+            List<Notification> notifications = taskManager.getNotifications();
+            
+            notificationListView.setItems(FXCollections.observableArrayList(notifications));
+            showView(notificationListView, container);
+        });
+
+        //------------------------------------------------------------------
+
+        HBox topButtonsContainer = new HBox(10);
+        topButtonsContainer.getChildren().addAll(searchButton, showCategoriesButton, showPrioritiesButton, showNotificationsButton, showTasksButton);
+
+        HBox bottomButtonsContainer = new HBox(10); // 10 is spacing between buttons
+        bottomButtonsContainer.getChildren().addAll(addTaskButton, addCategoryButton, addPriorityButton);
+
+        mainContent.getChildren().addAll(topButtonsContainer, container, bottomButtonsContainer);
 
         // Create a BorderPane and add the top bar and main content
         BorderPane root = new BorderPane();
@@ -68,38 +193,40 @@ public class Main extends Application {
         // Show the stage (window)
         primaryStage.show();
 
-        taskManager.createCategory(1, "STYLESHEET_CASPIAN");
-        taskManager.createCategory(2, "STYLESHEET_MODENA");
-        taskManager.createCategory(3, "STYLESHEET_UNITY");
+        notifyDelayedTasks();
 
-        taskManager.createPriority(2, "Low");
-        taskManager.createPriority(3, "Medium");
-        taskManager.createPriority(4, "High");
-
-        taskManager.createTask(1, "Task 1", "Description 1", 1, 2, LocalDate.now());
-        taskManager.createTask(2, "Task 2", "Description 2", 1, 2, LocalDate.now());
-        taskManager.createTask(3, "Task 3", "Description 3", 1, 2, LocalDate.now());
-
-        /*
-        // Update the list view with all tasks initially
         taskListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
-
-        // Bind the filtered tasks to the list view
-        searchBar.getSearchButton().setOnAction(event -> {
-            taskListView.setItems(FXCollections.observableArrayList(filteredTasks));
-        });
-        */
-
-        // Add functionality to the "Add Task" button
-        addTaskButton.setOnAction(event -> {
-            // Add the new task to the task manager
-            taskManager.createTask(5, "STYLESHEET_MODENA", "lol", 1, 1, LocalDate.now());
-            
-            // Update the list view to reflect the new task
-            taskListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
-        });
+        showView(taskListView, container);
     }
 
+    // Method to notify the user of delayed tasks with a pop-up alert
+    public void notifyDelayedTasks() {
+        int delayedCount = taskManager.getTasksByStatus(TaskStatus.DELAYED).size();
+
+        if (delayedCount > 0) {
+            // Ensure the alert runs on the JavaFX Application Thread
+            Platform.runLater(() -> {
+                Alert alert = new Alert(AlertType.WARNING);
+                alert.setTitle("Task Alert");
+                alert.setHeaderText(null);
+                alert.setContentText("You have " + delayedCount + " delayed task(s)!");
+                alert.show(); // Show the alert without blocking
+            });
+        }
+    }
+    
+    // Create method to switch views
+    public void showView(ListView<?> listView, VBox container) {
+        container.getChildren().clear();
+        container.getChildren().add(listView);
+    }
+    
+
+    @Override
+    public void stop() {
+        System.out.println("Application is closing. Saving data...");
+        taskManager.saveData();
+    }
     public static void main(String[] args) {
         // Launch the JavaFX application
         launch(args);

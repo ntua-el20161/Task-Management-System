@@ -1,9 +1,13 @@
 /home/bill/medialab_semester_project/src/main/java/taskmanagementsystem/Notification.java
-/home/bill/medialab_semester_project/src/main/java/SearchBar.java
 /home/bill/medialab_semester_project/src/main/java/Main.java
+/home/bill/medialab_semester_project/src/main/java/AddPriorityForm.java
 /home/bill/medialab_semester_project/src/main/java/taskmanagementsystem/TaskManager.java
 /home/bill/medialab_semester_project/src/main/java/taskmanagementsystem/NotificationType.java
-/home/bill/medialab_semester_project/src/main/java/taskmanagementsystem/Category.java
 /home/bill/medialab_semester_project/src/main/java/TopBar.java
 /home/bill/medialab_semester_project/src/main/java/taskmanagementsystem/Task.java
 /home/bill/medialab_semester_project/src/main/java/taskmanagementsystem/Priority.java
+/home/bill/medialab_semester_project/src/main/java/taskmanagementsystem/TaskStatus.java
+/home/bill/medialab_semester_project/src/main/java/taskmanagementsystem/Category.java
+/home/bill/medialab_semester_project/src/main/java/SearchForm.java
+/home/bill/medialab_semester_project/src/main/java/AddCategoryForm.java
+/home/bill/medialab_semester_project/src/main/java/AddTaskForm.java
