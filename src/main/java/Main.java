@@ -1,6 +1,7 @@
 import taskmanagementsystem.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.application.Application;
@@ -15,6 +16,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+// Assumption: oi ypenthimiseis pou h prothesmia tous perase diagrafontai sthn arxikopoihsh
+
+//TODO: javadoc
+//TODO: comments
+//TODO: Report
 
 public class Main extends Application {
     private TaskManager taskManager; 
@@ -34,8 +41,8 @@ public class Main extends Application {
         // Update the status of tasks whose due date has passed
         updateDelayedTasks();
 
-        // Check for notifications at startup
-        checkNotificationsAtStartup();
+        // Delete passed notifications
+        deleteExpiredNotifications();
 
         //------------------------------------------------------------------
         // Top bar section
@@ -117,7 +124,6 @@ public class Main extends Application {
         // Create the search bar
         Button searchButton = new Button("Search Tasks");
 
-        // TODO: add contains text search
         // Add functionality to the search button
         searchButton.setOnAction(event -> {
             SearchForm searchForm = new SearchForm(taskManager, searchTaskCustomListView);
@@ -195,6 +201,9 @@ public class Main extends Application {
 
         // Notify the user of delayed tasks
         notifyDelayedTasks();
+
+        // Check for notifications at startup
+        checkNotificationsAtStartup();
     
         taskCustomListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
         showView(taskCustomListView, container);
@@ -233,6 +242,24 @@ public class Main extends Application {
         }
     }
 
+    private void deleteExpiredNotifications() {
+        // Get today's date
+        LocalDate today = LocalDate.now();
+
+        // Create a list to store the notifications to be removed
+        List<Notification> notificationsToRemove = new ArrayList<>();
+
+        // Iterate over the notifications and add expired ones to the list
+        for (Notification notification : taskManager.getNotifications()) {
+            if (notification.getTriggerDate().isBefore(today)) {
+                notificationsToRemove.add(notification);
+            }
+        }
+
+        // Remove the expired notifications from the taskManager
+        taskManager.getNotifications().removeAll(notificationsToRemove);
+    }
+
     private void checkNotificationsAtStartup() {
         LocalDate today = LocalDate.now();
         List<Notification> notifications = taskManager.getNotifications();
@@ -247,8 +274,13 @@ public class Main extends Application {
     private void showNotificationAlert(Notification notification) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Task Reminder");
-        alert.setHeaderText("Reminder for: " + notification.getTask().getTitle());
-        alert.setContentText(notification.getMessage());
+        for(Task task : taskManager.getTasks()) {
+            if(task.getId() == notification.getTaskId()) {
+                alert.setHeaderText("Reminder for: " + task.getTitle());
+                alert.setContentText("Task: " + task.getTitle() + "\n" + "Due Date: " + task.getDueDate());
+                break;
+            }
+        }
         alert.showAndWait();
     }
     @Override

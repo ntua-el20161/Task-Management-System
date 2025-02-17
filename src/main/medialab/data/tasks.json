@@ -4,7 +4,7 @@
   "description" : "Finalize and submit the project report by the due date.",
   "categoryId" : 1,
   "priorityId" : 1,
-  "dueDate" : "2025-02-15",
+  "dueDate" : "2025-04-23",
   "status" : "COMPLETED"
 }, {
   "id" : 2,
@@ -36,8 +36,8 @@
   "description" : "Prepare slides and rehearse for the client presentation.",
   "categoryId" : 6,
   "priorityId" : 1,
-  "dueDate" : "2025-02-20",
-  "status" : "IN_PROGRESS"
+  "dueDate" : "2025-03-27",
+  "status" : "DELAYED"
 }, {
   "id" : 7,
   "title" : "Fix Critical Bug",
