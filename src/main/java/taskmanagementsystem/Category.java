@@ -9,13 +9,12 @@ public class Category {
     private String name;
     private List<Task> tasks;
     
-    static Integer nextId = 11;
     // Default constructor: Required for JSON deserialization
     public Category() {}
 
     // Default access: Only the TaskManager can create categories
-    Category(String name) {
-        this.id = nextId++;
+    Category(Integer id, String name) {
+        this.id = id;
         this.name = name;
         this.tasks = new ArrayList<>();
     }
@@ -54,6 +53,10 @@ public class Category {
 
     void addTask(Task task) {
         tasks.add(task);
+    }
+
+    void removeTask(Task task) {
+        tasks.remove(task);
     }
 
     void deleteCategory() {

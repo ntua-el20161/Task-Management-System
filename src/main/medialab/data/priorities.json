@@ -1,4 +1,8 @@
 [ {
+  "id" : 0,
+  "name" : "Default",
+  "tasks" : [ ]
+}, {
   "id" : 1,
   "name" : "High",
   "tasks" : [ {
@@ -10,7 +14,7 @@
     "dueDate" : "2025-02-15",
     "status" : "IN_PROGRESS"
   }, {
-    "id" : 1,
+    "id" : 4,
     "title" : "Update Website",
     "description" : "Fix layout issues and improve performance.",
     "categoryId" : 4,
@@ -18,7 +22,7 @@
     "dueDate" : "2025-02-18",
     "status" : "POSTPONED"
   }, {
-    "id" : 1,
+    "id" : 6,
     "title" : "Client Presentation",
     "description" : "Prepare slides and rehearse for the client presentation.",
     "categoryId" : 6,
@@ -26,7 +30,7 @@
     "dueDate" : "2025-02-20",
     "status" : "IN_PROGRESS"
   }, {
-    "id" : 1,
+    "id" : 7,
     "title" : "Fix Critical Bug",
     "description" : "Investigate and resolve the reported issue in production.",
     "categoryId" : 1,
@@ -41,20 +45,12 @@
     "priorityId" : 1,
     "dueDate" : "2025-03-20",
     "status" : "OPEN"
-  }, {
-    "id" : 11,
-    "title" : "Dilly Dally",
-    "description" : "just dilly dally",
-    "categoryId" : 2,
-    "priorityId" : 1,
-    "dueDate" : "2025-02-17",
-    "status" : "OPEN"
   } ]
 }, {
   "id" : 2,
   "name" : "Medium",
   "tasks" : [ {
-    "id" : 3,
+    "id" : 2,
     "title" : "Team Meeting",
     "description" : "Discuss project updates and next steps.",
     "categoryId" : 3,
@@ -62,15 +58,7 @@
     "dueDate" : "2025-02-10",
     "status" : "OPEN"
   }, {
-    "id" : 5,
-    "title" : "Submit Tax Documents",
-    "description" : "Gather all required documents and file tax returns.",
-    "categoryId" : 5,
-    "priorityId" : 2,
-    "dueDate" : "2025-03-01",
-    "status" : "OPEN"
-  }, {
-    "id" : 7,
+    "id" : 9,
     "title" : "Organize Workspace",
     "description" : "Clean and arrange the workspace for better efficiency.",
     "categoryId" : 7,
@@ -82,7 +70,7 @@
   "id" : 3,
   "name" : "Low",
   "tasks" : [ {
-    "id" : 1,
+    "id" : 3,
     "title" : "Code Review",
     "description" : "Review the latest code changes and provide feedback.",
     "categoryId" : 1,
@@ -90,15 +78,7 @@
     "dueDate" : "2025-02-12",
     "status" : "OPEN"
   }, {
-    "id" : 2,
-    "title" : "Write Blog Post",
-    "description" : "Draft and publish a blog post on the latest technology trends.",
-    "categoryId" : 4,
-    "priorityId" : 3,
-    "dueDate" : "2025-02-25",
-    "status" : "POSTPONED"
-  }, {
-    "id" : 8,
+    "id" : 10,
     "title" : "Plan Weekend Getaway",
     "description" : "Book accommodations and finalize itinerary.",
     "categoryId" : 8,

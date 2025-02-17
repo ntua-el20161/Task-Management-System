@@ -1,15 +1,9 @@
 [ {
-  "id" : 1,
-  "triggerDate" : "2025-02-14",
-  "taskId" : 1,
-  "dueDate" : "2025-02-15",
-  "type" : "DAY_BEFORE"
-}, {
   "id" : 2,
-  "triggerDate" : "2025-02-09",
+  "triggerDate" : "2025-01-10",
   "taskId" : 2,
   "dueDate" : "2025-02-10",
-  "type" : "DAY_BEFORE"
+  "type" : "MONTH_BEFORE"
 }, {
   "id" : 3,
   "triggerDate" : "2025-02-11",
@@ -23,12 +17,6 @@
   "dueDate" : "2025-02-18",
   "type" : "DAY_BEFORE"
 }, {
-  "id" : 5,
-  "triggerDate" : "2025-02-28",
-  "taskId" : 5,
-  "dueDate" : "2025-03-01",
-  "type" : "DAY_BEFORE"
-}, {
   "id" : 6,
   "triggerDate" : "2025-02-19",
   "taskId" : 6,
@@ -39,12 +27,6 @@
   "triggerDate" : "2025-02-13",
   "taskId" : 7,
   "dueDate" : "2025-02-14",
-  "type" : "DAY_BEFORE"
-}, {
-  "id" : 8,
-  "triggerDate" : "2025-02-24",
-  "taskId" : 8,
-  "dueDate" : "2025-02-25",
   "type" : "DAY_BEFORE"
 }, {
   "id" : 9,

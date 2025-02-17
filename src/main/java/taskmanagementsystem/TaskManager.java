@@ -10,6 +10,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
 
+// Assumption: Otan kanoume update ena task kai allazoume to dueDate, allazei automata kai to triggerDate twn ypenthimisewn analoga me to type tous
+// An to type einai custom kai to trigger Date einai meta to neo dueDate tote h ypnthimish diagrafetai
+// Assumption: Otan diagrafetai mia ergasia diagrafontai kai oles oi ypenthymiseis
+// Need: Java 8+ and Jackson library
+
 public class TaskManager {
     private List<Category> categories;
     private List<Priority> priorities;
@@ -45,8 +50,9 @@ public class TaskManager {
      * @param dueDate
      * @return the created task
      */
-    public Task createTask(String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate) {
-        Task task = new Task(title, description, categoryId, priorityId, dueDate);
+    public Task createTask(String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate, TaskStatus status) {
+        int newId = tasks.isEmpty() ? 1 : tasks.get(tasks.size() - 1).getId() + 1; // Ensure unique ID
+        Task task = new Task(newId, title, description, categoryId, priorityId, dueDate, status);
         this.tasks.add(task);
         for(Category category : categories) {
             if(category.getId().equals(categoryId)) {
@@ -68,13 +74,75 @@ public class TaskManager {
      * @param taskTitle the title of the task to remove
      */
     public void deleteTask(Task task) {
-        tasks.remove(task);
-
-        for(Notification notification : notifications) {
-            if(notification.getTaskId().equals(task.getId())) {
-                notifications.remove(notification);
+        notifications.removeIf(notification -> notification.getTaskId() == task.getId());
+        for(Category category : categories) {
+            if(category.getId().equals(task.getCategoryId())) {
+                category.removeTask(task);
+                break;
             }
         }
+        for(Priority priority : priorities) {
+            if(priority.getId().equals(task.getPriorityId())) {
+                priority.removeTask(task);
+                break;
+            }
+        }
+        tasks.remove(task);
+    }
+
+    public void updateTask(Task task, String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate, TaskStatus status) {
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setDueDate(dueDate);
+        task.setStatus(status);
+
+        if (status == TaskStatus.COMPLETED) {
+            notifications.removeIf(notification -> notification.getTaskId().equals(task.getId()));
+        }
+        
+        
+        for(Notification notification : notifications) {
+            if(notification.getTaskId().equals(task.getId())) {
+                if(notification.getType() == NotificationType.DAY_BEFORE) {
+                    notification.setTriggerDate(dueDate.minusDays(1));
+                } else if(notification.getType() == NotificationType.WEEK_BEFORE) {
+                    notification.setTriggerDate(dueDate.minusWeeks(1));
+                } else if(notification.getType() == NotificationType.MONTH_BEFORE) {
+                    notification.setTriggerDate(dueDate.minusMonths(1));
+                }
+            }
+        }
+
+        // In case there are multiple custom notifications
+        // We dont want to be removing while iterating so we use removeIf separately from the above code block
+        notifications.removeIf(notification -> 
+            notification.getTaskId().equals(task.getId()) && 
+            notification.getType() == NotificationType.CUSTOM && 
+            (notification.getTriggerDate().isAfter(dueDate) || notification.getTriggerDate().isEqual(dueDate))
+        );
+
+        if(!task.getCategoryId().equals(categoryId)) {
+            for(Category category : categories) {
+                if(category.getId().equals(task.getCategoryId())) {
+                    category.removeTask(task);
+                }
+                if(category.getId().equals(categoryId)) {
+                    category.addTask(task);
+                }
+            }
+        }
+        if(!task.getPriorityId().equals(priorityId)) {
+            for(Priority priority : priorities) {
+                if(priority.getId().equals(task.getPriorityId())) {
+                    priority.removeTask(task);
+                }
+                if(priority.getId().equals(priorityId)) {
+                    priority.addTask(task);
+                }
+            }
+        }
+        task.setCategoryId(categoryId);
+        task.setPriorityId(priorityId);
     }
 
     /**
@@ -83,7 +151,8 @@ public class TaskManager {
      * @return the created category
      */
     public Category createCategory(String name) {
-        Category category = new Category(name);
+        int newId = categories.isEmpty() ? 1 : categories.get(categories.size() - 1).getId() + 1; // Ensure unique ID
+        Category category = new Category(newId, name);
         this.categories.add(category);
         return category;
     }
@@ -93,10 +162,7 @@ public class TaskManager {
      * @param category the category to delete
      */
     public void deleteCategory(Category category) {
-        List<Task> tasks = category.getTasks();
-        for(Task task : tasks) {
-            deleteTask(task);
-        }
+        new ArrayList<>(category.getTasks()).forEach(this::deleteTask);
         category.deleteCategory();
         categories.remove(category);
     }
@@ -107,7 +173,8 @@ public class TaskManager {
      * @return the created priority
      */
     public Priority createPriority(Integer id, String name) {
-        Priority priority = new Priority(id, name);
+        int newId = priorities.isEmpty() ? 1 : priorities.get(priorities.size() - 1).getId() + 1; // Ensure unique ID
+        Priority priority = new Priority(newId, name);
         this.priorities.add(priority);
         return priority;
     }
@@ -127,7 +194,8 @@ public class TaskManager {
     }
 
     public void addNotification(NotificationType type, LocalDate triggerDate, Task task) throws IllegalArgumentException {
-        Notification notification = new Notification(notifications.size()+1, type, triggerDate, task.getId(), task.getDueDate());
+        int newId = notifications.isEmpty() ? 1 : notifications.get(notifications.size() - 1).getId() + 1; // Ensure unique ID
+        Notification notification = new Notification(newId, type, triggerDate, task.getId(), task.getDueDate());
         notifications.add(notification);
     }
 

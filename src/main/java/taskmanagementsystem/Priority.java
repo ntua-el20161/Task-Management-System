@@ -60,6 +60,10 @@ public class Priority {
         tasks.add(task);
     }
 
+    void removeTask(Task task) {
+        tasks.remove(task);
+    }
+    
     void deletePriority() {
         tasks.clear();
     }

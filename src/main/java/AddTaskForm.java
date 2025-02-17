@@ -41,6 +41,10 @@ public class AddTaskForm {
         List<Category> categories = taskManager.getCategories();
         List<Priority> priorities = taskManager.getPriorities();
 
+        Label statusLabel = new Label("Status:");
+        ComboBox<String> statusComboBox = new ComboBox<>();
+        statusComboBox.getItems().addAll("Open", "In progress", "Postponed", "Completed", "Delayed");
+
         for(Category category : categories) {
             categoryComboBox.getItems().add(category.getName());
         }
@@ -56,10 +60,24 @@ public class AddTaskForm {
             String selectedCategory = categoryComboBox.getValue();
             String selectedPriority = priorityComboBox.getValue();
             LocalDate dueDate = dueDatePicker.getValue();
+            String statusString = statusComboBox.getValue();
 
             if (title.isEmpty() || selectedCategory == null || selectedPriority == null || dueDate == null) {
                 showAlert("Error", "Please fill all fields.");
                 return;
+            }
+
+            TaskStatus status = TaskStatus.OPEN;
+            if(statusString == "Open") {
+                status = TaskStatus.OPEN;
+            } else if(statusString == "In progress") {
+                status = TaskStatus.IN_PROGRESS;
+            } else if(statusString == "Postponed") {
+                status = TaskStatus.POSTPONED;
+            } else if(statusString == "Completed") {
+                status = TaskStatus.COMPLETED;
+            } else if(statusString == "Delayed") {
+                status = TaskStatus.DELAYED;
             }
 
             Integer categoryId = null;
@@ -79,7 +97,7 @@ public class AddTaskForm {
             }
 
             // Create the task
-            taskManager.createTask(title, description, categoryId, priorityId, dueDate);
+            taskManager.createTask(title, description, categoryId, priorityId, dueDate, status);
 
             window.close();
         });
@@ -91,6 +109,7 @@ public class AddTaskForm {
             categoryLabel, categoryComboBox,
             priorityLabel, priorityComboBox,
             dueDateLabel, dueDatePicker,
+            statusLabel, statusComboBox,
             submitButton
         );
         layout.setPadding(new Insets(10));

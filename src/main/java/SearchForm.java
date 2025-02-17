@@ -1,14 +1,11 @@
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.ser.std.InetAddressSerializer;
-
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -19,9 +16,9 @@ public class SearchForm {
     private Button searchButton;
 
     private TaskManager taskManager;
-    ListView<Task> taskListView;
+    CustomListView<Task> taskListView;
 
-    public SearchForm(TaskManager taskManager, ListView<Task> taskListView) {
+    public SearchForm(TaskManager taskManager, CustomListView<Task> taskListView) {
         this.taskManager = taskManager;
         this.taskListView = taskListView;
     }

@@ -1,11 +1,7 @@
 import taskmanagementsystem.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -15,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -36,10 +31,17 @@ public class Main extends Application {
         primaryStage.setWidth(950);  // Set width
         primaryStage.setHeight(600); // Set height
 
+        // Update the status of tasks whose due date has passed
+        updateDelayedTasks();
+
+        // Check for notifications at startup
+        checkNotificationsAtStartup();
+
         //------------------------------------------------------------------
         // Top bar section
 
         TopBar topBar = new TopBar(taskManager);
+        
 
         // ------------------------------------------------------------------
 
@@ -48,17 +50,20 @@ public class Main extends Application {
         mainContent.setPadding(new Insets(20));
 
         // Create a list view to display tasks
-        ListView<Task> taskListView = new ListView<>();
-        taskListView.setPrefHeight(400);
+        CustomListView<Task> taskCustomListView = new CustomListView<>(taskManager, topBar);
+        taskCustomListView.setupListView(Task.class, false);
 
-        ListView<Category> categoryListView = new ListView<>();
-        categoryListView.setPrefHeight(400);
+        CustomListView<Category> categoryCustomListView = new CustomListView<>(taskManager, topBar);
+        categoryCustomListView.setupListView(Category.class, false);
 
-        ListView<Priority> priorityListView = new ListView<>();
-        priorityListView.setPrefHeight(400);
+        CustomListView<Priority> priorityCustomListView = new CustomListView<>(taskManager, topBar);
+        priorityCustomListView.setupListView(Priority.class, false);
 
-        ListView<Notification> notificationListView = new ListView<>();
-        notificationListView.setPrefHeight(400);
+        CustomListView<Notification> notificationCustomListView = new CustomListView<>(taskManager, topBar);
+        notificationCustomListView.setupListView(Notification.class, false);
+
+        CustomListView<Task> searchTaskCustomListView = new CustomListView<>(taskManager, topBar);
+        searchTaskCustomListView.setupListView(Task.class, true);
 
         // Create a container to hold the list view
         VBox container = new VBox(10);
@@ -76,7 +81,7 @@ public class Main extends Application {
             addTaskForm.showForm();
 
             // Update the list view to reflect the new task
-            taskListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
+            taskCustomListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
 
             //Update the top bar
             topBar.updateLabels();
@@ -115,8 +120,9 @@ public class Main extends Application {
         // TODO: add contains text search
         // Add functionality to the search button
         searchButton.setOnAction(event -> {
-            SearchForm searchForm = new SearchForm(taskManager, taskListView);
+            SearchForm searchForm = new SearchForm(taskManager, searchTaskCustomListView);
             searchForm.showForm();
+            showView(searchTaskCustomListView, container);
         });
 
         //------------------------------------------------------------------
@@ -126,8 +132,8 @@ public class Main extends Application {
 
         // Add functionality to the "Show Tasks" button
         showTasksButton.setOnAction(event -> {
-            taskListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
-            showView(taskListView, container);
+            taskCustomListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
+            showView(taskCustomListView, container);
         });
 
         //------------------------------------------------------------------
@@ -137,10 +143,8 @@ public class Main extends Application {
 
         // Add functionality to the "Show Categories" button
         showCategoriesButton.setOnAction(event -> {
-            List<Category> categories = taskManager.getCategories();
-            
-            categoryListView.setItems(FXCollections.observableArrayList(categories));
-            showView(categoryListView, container);
+            categoryCustomListView.setItems(FXCollections.observableArrayList(taskManager.getCategories()));
+            showView(categoryCustomListView, container);
         });
 
         //------------------------------------------------------------------
@@ -150,10 +154,8 @@ public class Main extends Application {
 
         // Add functionality to the "Show Priorities" button
         showPrioritiesButton.setOnAction(event -> {
-            List<Priority> priorities = taskManager.getPriorities();
-            
-            priorityListView.setItems(FXCollections.observableArrayList(priorities));
-            showView(priorityListView, container);
+            priorityCustomListView.setItems(FXCollections.observableArrayList(taskManager.getPriorities()));
+            showView(priorityCustomListView, container);
         });
 
         //------------------------------------------------------------------
@@ -163,16 +165,14 @@ public class Main extends Application {
 
         // Add functionality to the "Show Notifications" button
         showNotificationsButton.setOnAction(event -> {
-            List<Notification> notifications = taskManager.getNotifications();
-            
-            notificationListView.setItems(FXCollections.observableArrayList(notifications));
-            showView(notificationListView, container);
+            notificationCustomListView.setItems(FXCollections.observableArrayList(taskManager.getNotifications()));
+            showView(notificationCustomListView, container);
         });
 
         //------------------------------------------------------------------
 
         HBox topButtonsContainer = new HBox(10);
-        topButtonsContainer.getChildren().addAll(searchButton, showCategoriesButton, showPrioritiesButton, showNotificationsButton, showTasksButton);
+        topButtonsContainer.getChildren().addAll(searchButton, showTasksButton, showCategoriesButton, showPrioritiesButton, showNotificationsButton);
 
         HBox bottomButtonsContainer = new HBox(10); // 10 is spacing between buttons
         bottomButtonsContainer.getChildren().addAll(addTaskButton, addCategoryButton, addPriorityButton);
@@ -193,10 +193,11 @@ public class Main extends Application {
         // Show the stage (window)
         primaryStage.show();
 
+        // Notify the user of delayed tasks
         notifyDelayedTasks();
-
-        taskListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
-        showView(taskListView, container);
+    
+        taskCustomListView.setItems(FXCollections.observableArrayList(taskManager.getTasks()));
+        showView(taskCustomListView, container);
     }
 
     // Method to notify the user of delayed tasks with a pop-up alert
@@ -216,12 +217,40 @@ public class Main extends Application {
     }
     
     // Create method to switch views
-    public void showView(ListView<?> listView, VBox container) {
+    private void showView(CustomListView<?> customListView, VBox container) {
         container.getChildren().clear();
-        container.getChildren().add(listView);
+        container.getChildren().add(customListView.getListView());
     }
     
+    /**
+    * Updates the status of tasks whose due date has passed.
+    */
+    private void updateDelayedTasks() {
+            for (Task task : taskManager.getTasks()) {
+            if (task.getDueDate().isBefore(LocalDate.now()) && task.getStatus() != TaskStatus.COMPLETED) {
+                task.setStatus(TaskStatus.DELAYED);
+            }
+        }
+    }
 
+    private void checkNotificationsAtStartup() {
+        LocalDate today = LocalDate.now();
+        List<Notification> notifications = taskManager.getNotifications();
+
+        for (Notification notification : notifications) {
+            if (notification.getTriggerDate().equals(today)) {
+                showNotificationAlert(notification);
+            }
+        }
+    }
+
+    private void showNotificationAlert(Notification notification) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Task Reminder");
+        alert.setHeaderText("Reminder for: " + notification.getTask().getTitle());
+        alert.setContentText(notification.getMessage());
+        alert.showAndWait();
+    }
     @Override
     public void stop() {
         System.out.println("Application is closing. Saving data...");

@@ -37,15 +37,7 @@
 }, {
   "id" : 2,
   "name" : "Personal",
-  "tasks" : [ {
-    "id" : 11,
-    "title" : "Dilly Dally",
-    "description" : "just dilly dally",
-    "categoryId" : 2,
-    "priorityId" : 1,
-    "dueDate" : "2025-02-17",
-    "status" : "OPEN"
-  } ]
+  "tasks" : [ ]
 }, {
   "id" : 3,
   "name" : "Meetings",
@@ -61,27 +53,11 @@
 }, {
   "id" : 4,
   "name" : "Writing",
-  "tasks" : [ {
-    "id" : 8,
-    "title" : "Write Blog Post",
-    "description" : "Draft and publish a blog post on the latest technology trends.",
-    "categoryId" : 4,
-    "priorityId" : 3,
-    "dueDate" : "2025-02-25",
-    "status" : "POSTPONED"
-  } ]
+  "tasks" : [ ]
 }, {
   "id" : 5,
   "name" : "Finance",
-  "tasks" : [ {
-    "id" : 5,
-    "title" : "Submit Tax Documents",
-    "description" : "Gather all required documents and file tax returns.",
-    "categoryId" : 5,
-    "priorityId" : 2,
-    "dueDate" : "2025-03-01",
-    "status" : "OPEN"
-  } ]
+  "tasks" : [ ]
 }, {
   "id" : 6,
   "name" : "Presentations",
@@ -130,8 +106,4 @@
     "dueDate" : "2025-03-20",
     "status" : "OPEN"
   } ]
-}, {
-  "id" : 10,
-  "name" : "Learning",
-  "tasks" : [ ]
 } ]

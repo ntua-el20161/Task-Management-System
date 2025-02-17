@@ -18,20 +18,21 @@ public class Task {
     private LocalDate dueDate;
     private TaskStatus status;
     
-    static Integer nextId = 11;
-    
     // Default constructor: Required for JSON deserialization
     public Task() {}
 
     // Default access constructor: Tasks can only be created by the TaskManager
-    public Task(String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate) {
-        this.id = nextId++;
+    public Task(Integer id, String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate, TaskStatus status) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.categoryId = categoryId;
         this.priorityId = priorityId;
         this.dueDate = dueDate;
-        this.status = TaskStatus.OPEN;
+        if(status == null)
+            this.status = TaskStatus.OPEN;
+        else 
+            this.status = status;
     }
 
     /**
@@ -82,6 +83,12 @@ public class Task {
         return categoryId;
     }
 
+    // auxiliary method to change the category of a task
+    // the task need to be added in the new category list
+    void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
     
     /**
      * Get the priority id of the task
@@ -119,6 +126,14 @@ public class Task {
      */
     public TaskStatus getStatus() {
         return status;
+    }
+
+    /**
+     * Set the status of the task
+     * @param status the new status of the task
+     */
+    public void setStatus(TaskStatus status) {
+        this.status = status;
     }
 
     @Override

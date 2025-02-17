@@ -107,16 +107,8 @@ public class Notification {
      * Set the trigger date of the notification. Only for custom notifications.
      * @param triggerDate the new trigger date of the notification
      */
-    public void setTriggerDate(LocalDate triggerDate) throws IllegalArgumentException {
-        if(type == NotificationType.CUSTOM) {
-            if(triggerDate.isAfter(dueDate) || triggerDate.isEqual(dueDate)) {
-                throw new IllegalArgumentException("The trigger date must be before the due date.");
-            }
-            this.triggerDate = triggerDate;
-        }
-        else {
-            throw new IllegalArgumentException("Only custom notifications can have a custom trigger date.");
-        }
+    void setTriggerDate(LocalDate triggerDate) throws IllegalArgumentException {
+        this.triggerDate = triggerDate;
     }
    
     /**
@@ -130,10 +122,8 @@ public class Notification {
     // Method to display notification details
     @Override
     public String toString() {
-        return "Notification ID: " + id +
-               "\nType: " + type +
-               "\nTrigger Date: " + triggerDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy")) +
-               "\nAssociated Task: " + taskId;
+        return "Type: " + type.toString() +
+               "\nTrigger Date: " + triggerDate.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 
     // Setter used ONLY during deserialization (without validation)

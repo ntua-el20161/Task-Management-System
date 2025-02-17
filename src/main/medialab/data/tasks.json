@@ -5,7 +5,7 @@
   "categoryId" : 1,
   "priorityId" : 1,
   "dueDate" : "2025-02-15",
-  "status" : "IN_PROGRESS"
+  "status" : "COMPLETED"
 }, {
   "id" : 2,
   "title" : "Team Meeting",
@@ -13,7 +13,7 @@
   "categoryId" : 3,
   "priorityId" : 2,
   "dueDate" : "2025-02-10",
-  "status" : "OPEN"
+  "status" : "DELAYED"
 }, {
   "id" : 3,
   "title" : "Code Review",
@@ -21,7 +21,7 @@
   "categoryId" : 1,
   "priorityId" : 3,
   "dueDate" : "2025-02-12",
-  "status" : "OPEN"
+  "status" : "DELAYED"
 }, {
   "id" : 4,
   "title" : "Update Website",
@@ -30,14 +30,6 @@
   "priorityId" : 1,
   "dueDate" : "2025-02-18",
   "status" : "POSTPONED"
-}, {
-  "id" : 5,
-  "title" : "Submit Tax Documents",
-  "description" : "Gather all required documents and file tax returns.",
-  "categoryId" : 5,
-  "priorityId" : 2,
-  "dueDate" : "2025-03-01",
-  "status" : "OPEN"
 }, {
   "id" : 6,
   "title" : "Client Presentation",
@@ -54,14 +46,6 @@
   "priorityId" : 1,
   "dueDate" : "2025-02-14",
   "status" : "COMPLETED"
-}, {
-  "id" : 8,
-  "title" : "Write Blog Post",
-  "description" : "Draft and publish a blog post on the latest technology trends.",
-  "categoryId" : 4,
-  "priorityId" : 3,
-  "dueDate" : "2025-02-25",
-  "status" : "POSTPONED"
 }, {
   "id" : 9,
   "title" : "Organize Workspace",
@@ -85,13 +69,5 @@
   "categoryId" : 9,
   "priorityId" : 1,
   "dueDate" : "2025-03-20",
-  "status" : "OPEN"
-}, {
-  "id" : 11,
-  "title" : "Dilly Dally",
-  "description" : "just dilly dally",
-  "categoryId" : 2,
-  "priorityId" : 1,
-  "dueDate" : "2025-02-17",
   "status" : "OPEN"
 } ]
