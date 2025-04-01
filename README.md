@@ -9,8 +9,6 @@ This project is a task management system implemented in **Java** using **Maven**
 ### Prerequisites
 
 - Installed **Java 17+**
-- Installed **Maven**
-- Installed **Git**
 - Installed **JavaFX SDK** (if not included in the JDK)
 
 ### Setup Instructions
