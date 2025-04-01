@@ -3,9 +3,6 @@ package taskmanagementsystem;
 import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-// Assumption 1: The user cannot change the category of a Task
-// Assumption 2: The user can change the priority of a Task
-
 public class Task {
     // Attributes
     private Integer id;
@@ -19,10 +16,10 @@ public class Task {
     private TaskStatus status;
     
     // Default constructor: Required for JSON deserialization
-    public Task() {}
+    Task() {}
 
     // Default access constructor: Tasks can only be created by the TaskManager
-    public Task(Integer id, String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate, TaskStatus status) {
+    Task(Integer id, String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate, TaskStatus status) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -35,50 +32,26 @@ public class Task {
             this.status = status;
     }
 
-    /**
-     * Get the ID of the task
-     * @return the ID of the task
-     */
     public Integer getId() {
         return id;
     }
 
-    /**
-     * Get the title of the task
-     * @return the title of the task
-     */
     public String getTitle() {
         return title;
     }
 
-    /**
-     * Set the title of the task
-     * @param title the new title of the task
-     */
     public void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * Get the description of the task
-     * @return the description of the task
-     */
     public String getDescription() {
         return description;
     }
 
-    /**
-     * Set the description of the task
-     * @param description the new description of the task
-     */
     public void setDescription(String description) {
         this.description = description;
     }
 
-    /**
-     * Get the category id of the task
-     * @return the category id of the task
-     */
     public Integer getCategoryId() {
         return categoryId;
     }
@@ -89,11 +62,6 @@ public class Task {
         this.categoryId = categoryId;
     }
 
-    
-    /**
-     * Get the priority id of the task
-     * @return the priority id of the task
-     */
     public Integer getPriorityId() {
         return priorityId;
     }
@@ -104,40 +72,29 @@ public class Task {
         this.priorityId = priorityId;
     }
 
-    /**
-     * Get the due date of the task
-     * @return the due date of the task
-     */
     public LocalDate getDueDate() {
         return dueDate;
     }
 
-    /**
-     * Set the due date of the task
-     * @param dueDate the new due date of the task
-     */
-    public void setDueDate(LocalDate dueDate) {
+    // auxiliary method to change the due date of a task
+    // the notifications must also change
+    void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
     }
 
-    /**
-     * Get the status of the task
-     * @return the status of the task
-     */
     public TaskStatus getStatus() {
         return status;
     }
 
-    /**
-     * Set the status of the task
-     * @param status the new status of the task
-     */
-    public void setStatus(TaskStatus status) {
+    // auxiliary method to change the status of a task
+    // if the status changes to COMPLETED the notifications of the task must be deleted
+    void setStatus(TaskStatus status) {
         this.status = status;
     }
 
+
     @Override
-    public String toString () {
+    public String toString () { 
         return "Task: " + title;
     }
 }

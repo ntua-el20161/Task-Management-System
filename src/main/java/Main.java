@@ -17,11 +17,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-// Assumption: oi ypenthimiseis pou h prothesmia tous perase diagrafontai sthn arxikopoihsh
+// Assumption: oi ypenthimiseis pou h prothesmia tous perase diagrafontai sthn arxikopoihsh. An mia ypenthimish einai smr o xrhsths lamvanei mhnytma
 
 //TODO: javadoc
 //TODO: comments
 //TODO: Report
+//TODO: maybe getCategoryById etc
 
 public class Main extends Application {
     private TaskManager taskManager; 
@@ -209,7 +210,6 @@ public class Main extends Application {
         showView(taskCustomListView, container);
     }
 
-    // Method to notify the user of delayed tasks with a pop-up alert
     public void notifyDelayedTasks() {
         int delayedCount = taskManager.getTasksByStatus(TaskStatus.DELAYED).size();
 
@@ -231,13 +231,11 @@ public class Main extends Application {
         container.getChildren().add(customListView.getListView());
     }
     
-    /**
-    * Updates the status of tasks whose due date has passed.
-    */
     private void updateDelayedTasks() {
             for (Task task : taskManager.getTasks()) {
             if (task.getDueDate().isBefore(LocalDate.now()) && task.getStatus() != TaskStatus.COMPLETED) {
-                task.setStatus(TaskStatus.DELAYED);
+                // Update task status to DELAYED
+                taskManager.updateTask(task, task.getTitle(), task.getDescription(), task.getCategoryId(), task.getPriorityId(), task.getDueDate(), TaskStatus.DELAYED);
             }
         }
     }

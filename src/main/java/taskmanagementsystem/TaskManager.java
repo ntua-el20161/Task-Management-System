@@ -29,7 +29,7 @@ public class TaskManager {
     private static final String NOTIFICATIONS_FILE = "notifications.json";  // Define the notifications file name
 
     /**
-     * Constructor
+     * Constructor. Initializes a list of categories, priorities, tasks and notifications
      */
     public TaskManager() {
         this.categories = new ArrayList<Category>();
@@ -42,12 +42,13 @@ public class TaskManager {
     }
 
     /**
-     * Create a task
+     * Create a task. The task is added to the list of tasks and the corresponding category and priority.
      * @param title
      * @param description
-     * @param category
-     * @param priority
+     * @param categoryId
+     * @param priorityId
      * @param dueDate
+     * @param status
      * @return the created task
      */
     public Task createTask(String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate, TaskStatus status) {
@@ -70,8 +71,8 @@ public class TaskManager {
     }
 
     /**
-     * Removes a task
-     * @param taskTitle the title of the task to remove
+     * Delete a task. It removes the task from the list of tasks, the corresponding category and priority and deletes all of its notifications.
+     * @param taskTitle the title of the task to delete
      */
     public void deleteTask(Task task) {
         notifications.removeIf(notification -> notification.getTaskId() == task.getId());
@@ -90,17 +91,29 @@ public class TaskManager {
         tasks.remove(task);
     }
 
+    /**
+     * Method to update a task. It updates the title, description, category, priority, due date and status of the task.
+     * It uses the default access setters of the Task class and performs any necessary updates to the categories, priorities and notifications.
+     * @param Task the task to update
+     * @param Title the new title
+     * @param description the new description
+     * @param categoryId the new category id
+     * @param priorityId the new priority id
+     * @param dueDate the new due date
+     * @param status the new status
+     */
     public void updateTask(Task task, String title, String description, Integer categoryId, Integer priorityId, LocalDate dueDate, TaskStatus status) {
         task.setTitle(title);
         task.setDescription(description);
         task.setDueDate(dueDate);
         task.setStatus(status);
 
+        // if the task is completed, remove all notifications
         if (status == TaskStatus.COMPLETED) {
             notifications.removeIf(notification -> notification.getTaskId().equals(task.getId()));
         }
         
-        
+        // Update the trigger date of the notifications
         for(Notification notification : notifications) {
             if(notification.getTaskId().equals(task.getId())) {
                 if(notification.getType() == NotificationType.DAY_BEFORE) {
@@ -121,6 +134,7 @@ public class TaskManager {
             (notification.getTriggerDate().isAfter(dueDate) || notification.getTriggerDate().isEqual(dueDate))
         );
 
+        // Update the category and priority of the task
         if(!task.getCategoryId().equals(categoryId)) {
             for(Category category : categories) {
                 if(category.getId().equals(task.getCategoryId())) {
@@ -146,7 +160,7 @@ public class TaskManager {
     }
 
     /**
-     * Create a category
+     * Create a category. The category is added to the list of categories.
      * @param name the name of the category
      * @return the created category
      */
@@ -158,7 +172,7 @@ public class TaskManager {
     }
 
     /**
-     * Delete a category with all its tasks
+     * Delete a category and all its tasks
      * @param category the category to delete
      */
     public void deleteCategory(Category category) {
@@ -168,7 +182,7 @@ public class TaskManager {
     }
 
     /**
-     * Create a priority
+     * Create a priority. The priority is added to the list of priorities.
      * @param name the name of the priority
      * @return the created priority
      */
@@ -193,12 +207,22 @@ public class TaskManager {
         priorities.remove(priority);
     }
 
-    public void addNotification(NotificationType type, LocalDate triggerDate, Task task) throws IllegalArgumentException {
+    /**
+     * Add a notification to a task. The task must not have Status COMPLETED. This is ensured by the GUI.
+     * @param type
+     * @param triggerDate
+     * @param task
+     */
+    public void addNotification(NotificationType type, LocalDate triggerDate, Task task) {
         int newId = notifications.isEmpty() ? 1 : notifications.get(notifications.size() - 1).getId() + 1; // Ensure unique ID
         Notification notification = new Notification(newId, type, triggerDate, task.getId(), task.getDueDate());
         notifications.add(notification);
     }
 
+    /**
+     * Delete a notification
+     * @param notification the notification to delete
+     */
     public void deleteNotification(Notification notification) {
         notifications.remove(notification);
     }
@@ -206,6 +230,7 @@ public class TaskManager {
     /**
      * Finds a task by title
      * @param title the title to search for
+     * @return the task with the given title or null if not found
      */
     public Task findTaskByTitle(String title) {
         for (Task task : tasks) {
@@ -217,8 +242,9 @@ public class TaskManager {
     }
 
     /**
-     * Finds a task by category
-     * @param category the category to search for
+     * Finds the tasks of a category
+     * @param categoryName the category to search 
+     * @return A list of the tasks of the category or an empty list if category not found
      */
     public List<Task> findTaskByCategory(String categoryName) {
         Category categoryToSearch = null;
@@ -235,8 +261,9 @@ public class TaskManager {
     }
 
     /**
-     * Finds a task by priority
-     * @param priority the priority to search for
+     * Finds the tasks of a priority
+     * @param priorityName the priority to search
+     * @return A list of the tasks of the priority or an empty list if priority not found
      */
     public List<Task> findTaskByPriority(String priorityName) {
         Priority priorityToSearch = null;
@@ -285,7 +312,11 @@ public class TaskManager {
         return notifications;
     }
 
-    // Get tasks based on status
+    /**
+     * Get all tasks with a specific status
+     * @param status
+     * @return  the list of tasks with the given status
+     */
     public List<Task> getTasksByStatus(TaskStatus status) {
         List<Task> tasksByStatus = new ArrayList<>();
         for (Task task : tasks) {
@@ -296,6 +327,9 @@ public class TaskManager {
         return tasksByStatus;
     }
 
+    /**
+     * Load data from JSON files. Located in src/main/medialab/data folder
+     */
     public void loadData() {
         File tasksFile = Paths.get(DATA_FOLDER, TASKS_FILE).toFile();
         File categoriesFile = Paths.get(DATA_FOLDER, CATEGORIES_FILE).toFile();
@@ -328,7 +362,9 @@ public class TaskManager {
         }
     }
 
-    // Save data to JSON files
+    /**
+     * Save data to JSON files. Located in src/main/medialab/data folder
+     */
     public void saveData() {
         File tasksFile = Paths.get(DATA_FOLDER, TASKS_FILE).toFile();
         File categoriesFile = Paths.get(DATA_FOLDER, CATEGORIES_FILE).toFile();

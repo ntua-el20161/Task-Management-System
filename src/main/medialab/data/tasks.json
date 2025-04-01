@@ -29,7 +29,7 @@
   "categoryId" : 1,
   "priorityId" : 1,
   "dueDate" : "2025-02-18",
-  "status" : "POSTPONED"
+  "status" : "COMPLETED"
 }, {
   "id" : 6,
   "title" : "Client Presentation",

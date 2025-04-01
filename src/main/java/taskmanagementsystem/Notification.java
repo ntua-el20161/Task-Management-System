@@ -20,10 +20,10 @@ public class Notification {
     private LocalDate dueDate; // Due date of the associated task
     
     // Default constructor: Required for JSON deserialization
-    public Notification() {}
+    Notification() {}
 
     
-    public Notification(int id, NotificationType type, LocalDate triggerDate, Integer taskId, LocalDate dueDate) throws IllegalArgumentException {
+    Notification(int id, NotificationType type, LocalDate triggerDate, Integer taskId, LocalDate dueDate) throws IllegalArgumentException {
         this.id = id;
         this.type = type;
         this.triggerDate = triggerDate;
@@ -55,26 +55,14 @@ public class Notification {
         }
     }
 
-    /**
-     * Get the ID of the notification
-     * @return the ID of the notification
-     */
     public int getId() {
         return id;
     }
 
-    /**
-     * Get the type of the notification
-     * @return the type of the notification
-     */
     public NotificationType getType() {
         return type;
     }
 
-    /**
-     * Set the type of the notification
-     * @param type the new type of the notification
-     */
     public void setType(NotificationType type) throws IllegalArgumentException {
         switch (type) {
             case DAY_BEFORE:
@@ -94,27 +82,20 @@ public class Notification {
         }
         this.type = type;
     }
-    
-    /**
-     * Get the trigger date of the notification
-     * @return the trigger date of the notification
-     */
+
     public LocalDate getTriggerDate() {
         return triggerDate;
     }
 
-    /**
-     * Set the trigger date of the notification. Only for custom notifications.
-     * @param triggerDate the new trigger date of the notification
-     */
     void setTriggerDate(LocalDate triggerDate) throws IllegalArgumentException {
-        this.triggerDate = triggerDate;
+        if(type == NotificationType.CUSTOM) {
+            this.triggerDate = triggerDate;
+        }
+        else {
+            throw new IllegalArgumentException("The trigger date can only be set for custom notifications.");
+        }
     }
    
-    /**
-     * Get the task id associated with the notification
-     * @return the task id associated with the notification
-     */
     public Integer getTaskId() {
         return taskId;
     }
